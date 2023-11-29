@@ -14,6 +14,8 @@ import { useForm } from "react-hook-form";
 import { SignupValidation } from "@/lib/validation";
 import { z } from "zod";
 import { Loader } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createUserAccount } from "@/lib/appwrite/api";
 
 const SignupForm = () => {
   // 1. Define your form.
@@ -28,10 +30,10 @@ const SignupForm = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof SignupValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof SignupValidation>) {
+    const newUser = await createUserAccount(values);
+
+    console.log("eee", newUser);
   }
 
   const isLoading = false;
@@ -117,6 +119,16 @@ const SignupForm = () => {
               "Sign up"
             )}
           </Button>
+
+          <p className="text-small-regular text-light-2 text-center">
+            Already have an account?{" "}
+            <Link
+              to={"/sign-in"}
+              className="text-primary-500 text-small-semibold ml-1"
+            >
+              Login
+            </Link>
+          </p>
         </form>
       </div>
     </Form>
