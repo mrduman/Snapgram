@@ -15,7 +15,6 @@ import { SignupValidation } from "@/lib/validation";
 import { z } from "zod";
 import { Loader } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { createUserAccount, signInAccount } from "@/lib/appwrite/api";
 import { useToast } from "@/components/ui/use-toast";
 import {
   useCreateUserAccount,
@@ -31,10 +30,10 @@ const SignupForm = () => {
   const { mutateAsync: createUserAccount, isPending: isCreatingAccount } =
     useCreateUserAccount();
 
-  const { mutateAsync: singInAccount, isPending: isSignIn } =
+  const { mutateAsync: signInAccount, isPending: isSignIn } =
     useSignInAccount();
 
-  // 1. Define your form.
+  // To define the form.
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
     defaultValues: {
@@ -148,7 +147,7 @@ const SignupForm = () => {
           />
 
           <Button type="submit" className="shad-button_primary">
-            {isCreatingAccount ? (
+            {isCreatingAccount || isUserLoading || isSignIn ? (
               <div className="flex-center gap-2">
                 <Loader /> Loading...
               </div>
