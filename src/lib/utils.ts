@@ -24,3 +24,7 @@ export const formatDate = (dateString: string): string => {
     return `${Math.floor(differenceInSeconds / 86400)} days ago`;
   }
 };
+
+export const checkIsLiked = (likeList: string[], userId: string) => {
+  return likeList.includes(userId);
+};
