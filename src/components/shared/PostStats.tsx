@@ -19,14 +19,14 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const location = useLocation();
   const likesList = post.likes.map((user: Models.Document) => user.$id);
 
-  const [likes, setLikes] = useState<string[]>(likesList);
-  const [isSaved, setIsSaved] = useState(false);
-
-  const { mutate: likePost } = useLikesPost();
-  const { mutate: savePost } = useSavesPost();
-  const { mutate: deleteSavePost } = useDeleteSavedPost();
+  const { mutate: likesPost } = useLikesPost();
+  const { mutate: savesPost } = useSavesPost();
+  const { mutate: deleteSavedPost } = useDeleteSavedPost();
 
   const { data: currentUser } = useGetCurrentUser();
+
+  const [isSaved, setIsSaved] = useState<boolean>(false);
+  const [likes, setLikes] = useState<string[]>(likesList);
 
   const savedPostRecord = currentUser?.saves.find(
     (record: Models.Document) => record.posts.$id === post.$id
@@ -36,7 +36,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     setIsSaved(!!savedPostRecord);
   }, [currentUser]);
 
-  const handleLikePost = (
+  const handleLikesPost = (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
   ) => {
     e.stopPropagation();
@@ -50,7 +50,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     }
 
     setLikes(likesArray);
-    likePost({ postId: post.$id, likesArray });
+    likesPost({ postId: post.$id, likesArray: likesArray });
   };
 
   const handleSavePost = (
@@ -60,11 +60,11 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
 
     if (savedPostRecord) {
       setIsSaved(false);
-      return deleteSavePost(savedPostRecord.$id);
+      return deleteSavedPost(savedPostRecord.$id);
+    } else {
+      savesPost({ userId: userId, postId: post.$id });
+      setIsSaved(true);
     }
-
-    savePost({ userId: userId, postId: post.$id });
-    setIsSaved(true);
   };
 
   const containerStyles = location.pathname.startsWith("/profile")
@@ -85,7 +85,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
           alt="like"
           width={20}
           height={20}
-          onClick={(e) => handleLikePost(e)}
+          onClick={(e) => handleLikesPost(e)}
           className="cursor-pointer"
         />
         <p className="small-medium lg:base-medium">{likes.length}</p>
