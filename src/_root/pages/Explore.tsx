@@ -1,15 +1,38 @@
+import GridPostList from "@/components/shared/GridPostList";
+import Loader from "@/components/shared/Loader";
+import SearchResults from "@/components/shared/SearchResults";
 import { Input } from "@/components/ui/input";
 import useDebounce from "@/hooks/useDebounce";
-import { useSearchPosts } from "@/lib/react-query/queriesAndMutations";
-import { useState } from "react";
+import {
+  useGetPosts,
+  useSearchPosts,
+} from "@/lib/react-query/queriesAndMutations";
+import { useEffect, useState } from "react";
 
 const Explore = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const { data: posts, fetchNextPage, hasNextPage } = useGetPosts();
 
+  const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
 
   const { data: searchedPosts, isFetching: isSearchFetching } =
     useSearchPosts(debouncedValue);
+
+  if (!posts) {
+    return (
+      <div className="flex-center w-full h-full">
+        <Loader />
+      </div>
+    );
+  }
+
+  console.log("ssd", posts);
+
+  const shouldShowSearchResults = searchValue !== "";
+  const shouldShowPosts =
+    !shouldShowSearchResults &&
+    posts?.pages.every((item) => item?.documents.length === 0);
+
   return (
     <div className="explore-container">
       <div className="explore-inner_container">
@@ -43,7 +66,17 @@ const Explore = () => {
           />
         </div>
       </div>
-      <div className="flex flex-wrap gap-9 w-full max-w-5xl"></div>
+      <div className="flex flex-wrap gap-9 w-full max-w-5xl">
+        {shouldShowSearchResults ? (
+          <SearchResults />
+        ) : shouldShowPosts ? (
+          <p>End of posts</p>
+        ) : (
+          posts?.pages.map((item, index) => (
+            <GridPostList key={`page-${index}`} posts={item?.documents} />
+          ))
+        )}
+      </div>
     </div>
   );
 };
