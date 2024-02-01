@@ -1,8 +1,15 @@
 import { Input } from "@/components/ui/input";
+import useDebounce from "@/hooks/useDebounce";
+import { useSearchPosts } from "@/lib/react-query/queriesAndMutations";
 import { useState } from "react";
 
 const Explore = () => {
   const [searchValue, setSearchValue] = useState("");
+
+  const debouncedValue = useDebounce(searchValue, 500);
+
+  const { data: searchedPosts, isFetching: isSearchFetching } =
+    useSearchPosts(debouncedValue);
   return (
     <div className="explore-container">
       <div className="explore-inner_container">
