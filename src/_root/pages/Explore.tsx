@@ -26,8 +26,6 @@ const Explore = () => {
     );
   }
 
-  console.log("ssd", posts);
-
   const shouldShowSearchResults = searchValue !== "";
   const shouldShowPosts =
     !shouldShowSearchResults &&
