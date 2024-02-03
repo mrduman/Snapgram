@@ -206,10 +206,10 @@ export const useSearchPosts = (searchTerm: string) => {
   });
 };
 
-export const useGetUsers = () => {
+export const useGetUsers = (limit?: number) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_BY_ID],
-    queryFn: () => getUsers(),
+    queryFn: () => getUsers(limit),
   });
 };
 
