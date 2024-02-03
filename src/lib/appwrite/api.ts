@@ -445,7 +445,7 @@ export async function updateUser(user: IUpdateUser) {
     );
 
     //Failed to update
-    if (!updatePost) {
+    if (!updatedUser) {
       //Delete new file that has been recently uploaded
       if (hasFileToUpdate) {
         await deleteFile(image.imageId);
