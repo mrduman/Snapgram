@@ -1,5 +1,5 @@
 const LikedPosts = () => {
-  return <div>LikedPosts</div>;
+  return <div>Liked Posts</div>;
 };
 
 export default LikedPosts;
