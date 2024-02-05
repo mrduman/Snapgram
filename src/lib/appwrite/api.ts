@@ -105,11 +105,8 @@ export async function createPost(post: INewPost) {
       throw Error;
     }
 
-    //Convert tags in an array
-    let tags: string[] = [];
-    if (typeof post.tags === "string") {
-      tags = post.tags.replace(/ /g, "").split(",");
-    }
+    // Convert tags in an array
+    const tags = post.tags ? post.tags.replace(/ /g, "").split(",") : [];
 
     // Create post
     const newPost = await databases.createDocument(
@@ -291,11 +288,8 @@ export async function updatePost(post: IUpdatePost) {
 
       image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
     }
-    //Convert tags in an array
-    let tags: string[] = [];
-    if (typeof post.tags === "string") {
-      tags = post.tags.replace(/ /g, "").split(",");
-    }
+    // Convert tags in an array
+    const tags = post.tags ? post.tags.replace(/ /g, "").split(",") : [];
 
     // Update post
     const updatedPost = await databases.updateDocument(
