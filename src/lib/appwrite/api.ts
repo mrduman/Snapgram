@@ -1,8 +1,6 @@
 import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 import { ID, Query } from "appwrite";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
-import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEYS } from "../react-query/queryKeys";
 
 export async function createUserAccount(user: INewUser) {
   try {
@@ -37,7 +35,7 @@ export async function saveUserToDB(user: {
   email: string;
   name: string;
   imageUrl: URL;
-  username: string;
+  username?: string;
 }) {
   try {
     const newUser = await databases.createDocument(
@@ -46,6 +44,7 @@ export async function saveUserToDB(user: {
       ID.unique(),
       user
     );
+
     return newUser;
   } catch (error) {
     console.log(error);
@@ -62,9 +61,19 @@ export async function signInAccount(user: { email: string; password: string }) {
   }
 }
 
-export async function getCurrentUser() {
+export async function getAccount() {
   try {
     const currentAccount = await account.get();
+
+    return currentAccount;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCurrentUser() {
+  try {
+    const currentAccount = await getAccount();
 
     if (!currentAccount) throw Error;
 
@@ -78,6 +87,7 @@ export async function getCurrentUser() {
     return currentUser.documents[0];
   } catch (error) {
     console.log(error);
+    return null;
   }
 }
 
@@ -242,13 +252,6 @@ export async function deleteSavedPost(savedRecordId: string) {
     console.log(error);
   }
 }
-
-export const useGetCurrentUser = () => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.GET_CURRENT_USER],
-    queryFn: getCurrentUser,
-  });
-};
 
 export async function getPostById(postId: string) {
   try {
