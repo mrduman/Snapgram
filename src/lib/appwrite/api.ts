@@ -107,8 +107,8 @@ export async function createPost(post: INewPost) {
 
     //Convert tags in an array
     const tags =
-      typeof post.tags === "string"
-        ? post.tags.replace(/ /g, "").split(",")
+      typeof post?.tags === "string"
+        ? post?.tags.replace(/ /g, "").split(",")
         : [];
 
     // Create post
@@ -293,8 +293,8 @@ export async function updatePost(post: IUpdatePost) {
     }
     //Convert tags in an array
     const tags =
-      typeof post.tags === "string"
-        ? post.tags.replace(/ /g, "").split(",")
+      typeof post?.tags === "string"
+        ? post?.tags.replace(/ /g, "").split(",")
         : [];
 
     // Update post
